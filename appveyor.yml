@@ -1,0 +1,13 @@
+os: Visual Studio 2015
+install:
+  - set QTDIR=C:\Qt\5.7\msvc2015
+  - set PATH=%PATH%;%QTDIR%\bin
+build_script:
+  - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
+  - qmake haken.pro
+  - nmake release
+  - cd release
+  - windeployqt --release haken.exe
+artifacts:
+  - path: release
+    name: haken
