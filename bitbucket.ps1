@@ -1,4 +1,7 @@
 Write-Host "HelloWorld"
-Write-Host $env:HAKEN_USER
-Write-Host $env:HAKEN_URL
-# wget --user=%HAKEN_USER% --password=%HAKEN_PASS% %HAKEN_URL%
+$url = $env:BITBUCKET_URL
+$cred = $env:BITBUCKET_USER + ":" + $env:BITBUCKET_PASS
+$enc_cred = [convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($cred))
+$webclient = new-object System.Net.WebClient
+$webclient.Headers.Add("Authorization","Basic $enc_cred")
+$webclient.DownloadFile($url, "master.zip")
