@@ -1,56 +1,7 @@
+notifications:
+  email: false
 language: c++
-
-dist: trusty
-
 branches:
   only:
   - master
-  
-notifications:
-  email: false
-
-cache:
-  directories:
-    - Qt
-
-addons:
-  apt:
-    packages:
-      - git
-      - g++
-      - make
-      - autoconf
-      - automake
-      - libtool
-      - cmake
-      - pkg-config
-      - libxml2-dev
-      - libxslt1-dev
-      - libzip-dev
-      - libsqlite3-dev
-      - libusb-1.0-0-dev
-      - libssl-dev
-      - libssh2-1-dev
-      - libcurl4-openssl-dev
-      - mesa-common-dev
-
-
-before_install:
-  - if [ ! -e Qt/5.9.1 ] ; then
-      rm -rf Qt ;
-      wget http://download.qt.io/official_releases/qt/5.9/5.9.1/qt-opensource-linux-x64-5.9.1.run ;
-      chmod +x ./qt-opensource-linux-x64-5.9.1.run ;
-      ./qt-opensource-linux-x64-5.9.1.run --platform minimal --script qt-installer-noninteractive.qs --no-force-installations ;
-    fi
-    # TestPreferences uses gui calls, so run a xvfb so it has something to talk to
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-
-
-script:
-  - export CMAKE_PREFIX_PATH=$PWD/Qt/5.9.1/gcc_64/lib/cmake ;
-  - mkdir -p build && cd build
-  - cmake ..
-  - make
-
 
