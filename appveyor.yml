@@ -13,6 +13,7 @@ install:
   - set QTDIR=C:\Qt\5.7\msvc2015
   - set PATH=%PATH%;%QTDIR%\bin
   - ps : .\bitbucket.ps1
+  - dir
 build_script:
   - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86'
   - qmake haken.pro
