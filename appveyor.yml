@@ -1,0 +1,67 @@
+version: 1.0.{build}
+
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false
+
+branches:
+  only:
+    - master
+
+environment:
+  global:
+    fast_finish: true
+    clone_depth: 1
+    clone_folder: C:\projects\haken
+    shallow_clone: true
+    CONFIGURATION: $(configuration)
+
+  matrix:
+    - CMAKE_GENERATOR: "MinGW Makefiles"
+      QTDIR: C:\Qt\5.9.1\mingw53_32
+      MINGW: C:\Qt\Tools\mingw530_32
+      WINDEPLOYQT: C:\projects\haken\build\haken.exe
+
+init:
+  - set ORIGIN_PATH=%cd%
+  - cmd: ECHO "%ORIGIN_PATH%"
+  - git config --global core.autocrlf input
+
+install:
+  - call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+  - appveyor DownloadFile "http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/pkg-config_0.26-1_win32.zip" -FileName "C:\pkg-config_win32.zip"
+  - 7z x -y "C:\pkg-config_win32.zip" -o"C:\pkg-config"
+
+before_build:
+  - cmd: ECHO this is batch
+  - ps: Write-Host "This is PowerShell"
+  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+  - set PATH=%MINGW%\bin;%QTDIR%\bin;%PATH%
+  - cmd: cmake --version
+
+build_script:
+  - git submodule update --init --recursive
+  - mkdir build && cd build
+  - cmake .. -G"%CMAKE_GENERATOR%" -DCMAKE_PREFIX_PATH=%QTDIR% -DPKG_CONFIG_EXECUTABLE="C:\pkg-config\bin\pkg-config.exe"
+  - mingw32-make
+  - cd %ORIGIN_PATH% && dir
+  - cd build  && dir
+  - windeployqt --no-compiler-runtime --no-translations --release %WINDEPLOYQT%
+  - dir
+  - copy %QTDIR%\bin\libgcc_s_dw2-1.dll . /y
+  - copy %QTDIR%\bin\libwinpthread-1.dll . /y
+#libstdc++-6.dll
+#  - cd  Release  && dir
+
+test: off
+artifacts:
+  - path: build
+    name: build-all
+    type: zip
+  - path: build/release/haken.exe
+    name: haken-exe
+    type: file
+

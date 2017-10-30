@@ -1,0 +1,26 @@
+box: debian
+build:
+  steps:
+    - script:
+      name: HelloWorld
+      code: |
+        echo "HelloWorld"
+    - script:
+      name: SHOW ENV
+      code: |
+        echo $WERCKER_GIT_REPOSITORY
+        echo $WERCKER_STEP_NAME
+        echo $WERCKER_ROOT
+        echo $WERCKER_SOURCE_DIR
+        echo $WERCKER_OUTPUT_DIR
+        echo $WERCKER_CACHE_DIR
+        echo $WERCKER_REPORT_ARTIFACTS_DIR
+    - script:
+      name: OUTPUT
+      code: |
+        touch $WERCKER_REPORT_ARTIFACTS_DIR/ok
+    - script:
+      name: WAR ARTIFACT DOWNLOAD
+      code: |
+        rm -Rf $WERCKER_SOURCE_DIR/.git
+        cp -rf $WERCKER_SOURCE_DIR $WERCKER_REPORT_ARTIFACTS_DIR/
