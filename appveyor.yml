@@ -19,7 +19,6 @@ build_script:
   - nmake
   - dir
 after_build:
-  - ps : xcopy lib release/lib /Y
   - cd release
   - windeployqt --no-compiler-runtime --no-translations --release haken.exe
   - ps : rm *.cpp
