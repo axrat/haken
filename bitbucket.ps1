@@ -19,7 +19,7 @@ function mkdirp($path){
 
 
 mkdirp (Join-Path $pwd "unzip")
-mkdirp (Join-Path $pwd "source")
+mkdirp (Join-Path $pwd "src")
 
 $download = (Join-Path $pwd "master.zip")
 $dest = (Join-Path $pwd "unzip")
